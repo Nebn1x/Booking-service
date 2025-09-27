@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-roles-with-fixed-ids
+      author: Nebnix
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: '1'
+              - column:
+                  name: role
+                  value: CUSTOMER
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: '2'
+              - column:
+                  name: role
+                  value: ADMIN
