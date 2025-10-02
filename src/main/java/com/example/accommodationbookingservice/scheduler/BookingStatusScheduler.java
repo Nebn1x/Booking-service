@@ -106,7 +106,7 @@ public class BookingStatusScheduler {
                 Session sessionById = Session.retrieve(payment.getSessionId());
                 sessionById.expire();
             } catch (StripeException e) {
-                throw new StripeSessionCancellationException("Cant cancel stripe session " + e.getMessage());
+                throw new StripeSessionCancellationException("Can't cancel stripe session: " + e.getMessage());
             }
         }
         paymentRepository.saveAll(paymentList);
