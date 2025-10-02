@@ -9,4 +9,5 @@ import org.mapstruct.NullValueCheckStrategy;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
 public class MapperConfig {
+
 }

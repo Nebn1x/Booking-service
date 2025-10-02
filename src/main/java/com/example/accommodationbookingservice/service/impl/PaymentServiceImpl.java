@@ -1,5 +1,6 @@
 package com.example.accommodationbookingservice.service.impl;
 
+import com.example.accommodationbookingservice.config.StripeProperties;
 import com.example.accommodationbookingservice.dto.payment.PaymentDetailsDto;
 import com.example.accommodationbookingservice.dto.payment.PaymentDto;
 import com.example.accommodationbookingservice.entity.booking.Booking;
@@ -73,8 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
     private static final String CURRENT_PAYMENT_STATUS_IS = "Current payment status is ";
     private static final String CAN_T_FIND_STATUS_BY_NAME = "Can't find status by name";
 
-    private final String successUrl;
-    private final String cancelUrl;
+    private final StripeProperties stripeProperties;
     private final BookingNotificationBot bookingNotificationBot;
     private final PaymentMapper paymentMapper;
     private final BookingMapper bookingMapper;
@@ -190,8 +190,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .addPaymentMethodType(PAYMENT_METHOD)
                 .addLineItem(getLineItem(booking))
                 .setMode(SESSION_MODE)
-                .setSuccessUrl(successUrl)
-                .setCancelUrl(cancelUrl)
+                .setSuccessUrl(stripeProperties.getSuccessUrl())
+                .setCancelUrl(stripeProperties.getCancelUrl())
                 .build();
     }
 
@@ -264,7 +264,7 @@ public class PaymentServiceImpl implements PaymentService {
     private void updateBookingStatus(Booking booking, BookingStatus.BookingStatusName statusName) {
         BookingStatus bookingStatus
                 = bookingStatusRepository.findByName(statusName).orElseThrow(()
-                                -> new EntityNotFoundException(CAN_T_FIND_STATUS_BY_NAME));
+                -> new EntityNotFoundException(CAN_T_FIND_STATUS_BY_NAME));
         booking.setStatus(bookingStatus);
         bookingRepository.save(booking);
     }

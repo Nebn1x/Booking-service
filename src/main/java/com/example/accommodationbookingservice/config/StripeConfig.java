@@ -2,34 +2,28 @@ package com.example.accommodationbookingservice.config;
 
 import com.stripe.Stripe;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@RequiredArgsConstructor
 public class StripeConfig {
 
-    @Value("${stripe.key}")
-    private String stipeApiKey;
+    private final StripeProperties stripeProperties;
 
-    @Value("${stripe.success.url}")
-    private String successUrl;
-
-    @Value("${stripe.cancel.url}")
-    private String cancelUrl;
+    @PostConstruct
+    public void initSecretKey() {
+        Stripe.apiKey = stripeProperties.getKey();
+    }
 
     @Bean
     public String successUrl() {
-        return successUrl;
+        return stripeProperties.getSuccessUrl();
     }
 
     @Bean
     public String cancelUrl() {
-        return cancelUrl;
-    }
-
-    @PostConstruct
-    public void initSecretKey() {
-        Stripe.apiKey = stipeApiKey;
+        return stripeProperties.getCancelUrl();
     }
 }
