@@ -1,5 +1,6 @@
 package com.example.accommodationbookingservice.telegram;
 
+import com.example.accommodationbookingservice.config.TelegramProperties;
 import com.example.accommodationbookingservice.dto.user.UserResponseDto;
 import com.example.accommodationbookingservice.entity.telegram.TelegramChat;
 import com.example.accommodationbookingservice.exception.InvalidTelegramToken;
@@ -8,7 +9,6 @@ import com.example.accommodationbookingservice.repository.TelegramChatRepository
 import com.example.accommodationbookingservice.service.TelegramService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,14 +24,10 @@ public class BookingNotificationBot extends TelegramLongPollingBot {
     public static final String REGEX = " ";
     public static final String START = "/start";
     public static final String CANT_DECODE_TOKEN = "Cant decode token: ";
+
+    private final TelegramProperties telegramProperties;
     private final TelegramService telegramService;
     private final TelegramChatRepository telegramChatRepository;
-
-    @Value("${telegram.bot.username}")
-    private String botUserName;
-
-    @Value("${telegram.bot.token}")
-    private String botToken;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -54,12 +50,12 @@ public class BookingNotificationBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return botUserName;
+        return telegramProperties.getUsername();
     }
 
     @Override
     public String getBotToken() {
-        return botToken;
+        return telegramProperties.getToken();
     }
 
     private String getToken(String message) {

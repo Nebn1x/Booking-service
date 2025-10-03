@@ -29,7 +29,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BookingStatusScheduler {
-
     private final BookingRepository bookingRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final PaymentRepository paymentRepository;
@@ -37,16 +36,16 @@ public class BookingStatusScheduler {
     private final BookingNotificationBot bookingBot;
     private final TelegramChatRepository telegramChatRepository;
 
-    @Value("${scheduler.check-in-cron}")
+    @Value("${scheduler.check-in.cron}")
     private String checkInCron;
 
-    @Value("${scheduler.check-out-cron}")
+    @Value("${scheduler.check-out.cron}")
     private String checkOutCron;
 
     @Value("${scheduler.unconfirmed-delay}")
     private long unconfirmedDelay;
 
-    @Scheduled(cron = "${scheduler.check-in-cron}")
+    @Scheduled(cron = "${scheduler.check-in.cron}")
     public void ifCheckInDateIsToday() {
         LocalDate today = LocalDate.now();
         List<Booking> bookingList = bookingRepository.findAllByCheckInDate(today, BookingStatus.BookingStatusName.CONFIRMED);
@@ -58,15 +57,14 @@ public class BookingStatusScheduler {
                 TelegramNotificationBuilder.generateUpcomingBookingReminder(booking)));
     }
 
-    @Scheduled(cron = "${scheduler.check-out-cron}")
+    @Scheduled(cron = "${scheduler.check-out.cron}")
     @Transactional
     public void ifCheckOutDateIsToday() {
         LocalDate today = LocalDate.now();
         List<Booking> bookingList = bookingRepository.findByCheckOutDateAndStatus(today, BookingStatus.BookingStatusName.CONFIRMED);
         if (bookingList.isEmpty()) {
-            getAdminsEmail().forEach(b ->
-                    bookingBot.sendMessage(b,
-                            TelegramNotificationBuilder.getNoExpiredBookingsMessage()));
+            getAdminsChatIds().forEach(chatId ->
+                    bookingBot.sendMessage(chatId, TelegramNotificationBuilder.getNoExpiredBookingsMessage()));
             return;
         }
         updateBookingsStatus(bookingList, BookingStatus.BookingStatusName.EXPIRED);
@@ -77,7 +75,7 @@ public class BookingStatusScheduler {
     @Scheduled(fixedDelayString = "${scheduler.unconfirmed-delay}")
     @Transactional
     public void ifBookingUnconfirmedOneHour() {
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1L);
+        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
         List<Booking> bookingList = bookingRepository.findAllByCreatedAtAndStatus(oneHourAgo, BookingStatus.BookingStatusName.PENDING);
         if (bookingList.isEmpty()) {
             return;
@@ -112,8 +110,8 @@ public class BookingStatusScheduler {
         paymentRepository.saveAll(paymentList);
     }
 
-    private List<Long> getAdminsEmail() {
-        List<TelegramChat> allByUserRolesName = telegramChatRepository.findAllByUser_Roles_Role(RoleName.ADMIN);
-        return allByUserRolesName.stream().map(TelegramChat::getChatId).toList();
+    private List<Long> getAdminsChatIds() {
+        List<TelegramChat> adminChats = telegramChatRepository.findAllByUser_Roles_Role(RoleName.ADMIN);
+        return adminChats.stream().map(TelegramChat::getChatId).toList();
     }
 }

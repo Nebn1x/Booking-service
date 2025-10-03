@@ -106,7 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setSessionUrl(session.getUrl());
         payment.setSessionId(session.getId());
         payment.setBooking(booking);
-        payment.setAmount(BigDecimal.valueOf(session.getAmountTotal()));
+        payment.setAmount(BigDecimal.valueOf(session.getAmountTotal()).divide(BigDecimal.valueOf(VAL)));
         setStatusToPayment(payment, PENDING_PAYMENT_STATUS);
         paymentRepository.save(payment);
         String message = TelegramNotificationBuilder.paymentInitiated(payment);
@@ -153,7 +153,6 @@ public class PaymentServiceImpl implements PaymentService {
         String email = payment.getBooking().getUser().getEmail();
         bookingNotificationBot.sendMessage(email, paymentMessage);
         bookingNotificationBot.sendMessage(email, bookingMessage);
-
         return paymentMapper.toDto(payment);
     }
 
@@ -246,7 +245,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void checkPaymentStatus(Payment payment) {
-        if (!payment.getStatus().getName().equals(PaymentServiceImpl.PENDING_PAYMENT_STATUS)) {
+        if (!payment.getStatus().getName().equals(PENDING_PAYMENT_STATUS)) {
             throw new StripePaymentSessionException(CANT_CANCEL_STRIPE_SESSION + payment.getId()
                     + BECAUSE_BOOKING_STATUS + payment.getStatus().getName());
         }
