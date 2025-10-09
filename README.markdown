@@ -1,9 +1,9 @@
-# 🏠 Booking Service API
+#  Booking Service API
 
 The **Booking Service API** is a powerful RESTful backend built with Java and Spring Boot, designed to simplify accommodation rentals. Users can book properties, admins can manage listings and availability, and the system integrates with Stripe for secure payments and Telegram for real-time notifications. This scalable solution modernizes property rental management.
 
 
-## ✨ Features
+##  Features
 - **CRUD Operations**: Create, read, update, and delete accommodations, bookings, and user profiles.
 - **Secure Payments**: Process payments via Stripe with success/cancel handling.
 - **Real-Time Notifications**: Send booking updates via Telegram.
@@ -11,7 +11,7 @@ The **Booking Service API** is a powerful RESTful backend built with Java and Sp
 - **Database Migrations**: Automate schema updates with Liquibase.
 - **Pagination**: Efficiently retrieve paginated lists of accommodations and bookings.
 
-## 🧩 Technologies Used
+##  Technologies Used
 - **Java 21**: Core programming language
 - **Spring Boot 3.4.1**: Framework for rapid development
 - **Spring Security 6.4.4 + JWT 0.12.6**: Authentication and authorization
@@ -27,7 +27,7 @@ The **Booking Service API** is a powerful RESTful backend built with Java and Sp
 - **Lombok 1.18.34**: Boilerplate reduction
 - **MapStruct 1.6.3**: Entity-DTO mapping
 
-## 🗂️ Project Structure
+##  Project Structure
 The project uses a layered Spring Boot architecture:
 - **Controllers**: Handle HTTP requests
 - **Services**: Business logic
@@ -35,7 +35,7 @@ The project uses a layered Spring Boot architecture:
 - Source code: `src/main`
 - Tests: `src/test`
 
-## 🛠️ Setup Instructions
+##  Setup Instructions
 
 ### Prerequisites
 - **Java 21**
@@ -100,7 +100,7 @@ The project uses a layered Spring Boot architecture:
 ### Note
 - Liquibase will initialize the database schema and seed data on the first run.
 
-## 🧪 Example Requests
+##  Example Requests
 
 ### Create an Accommodation
 ```http
@@ -149,7 +149,7 @@ Content-Type: application/json
 }
 ```
 
-## 📄 Testing
+##  Testing
 Unit and integration tests cover controllers, services, and repositories. Run tests with:
 ```bash
 ./mvnw test
@@ -157,7 +157,7 @@ Unit and integration tests cover controllers, services, and repositories. Run te
 
 Tests validate CRUD operations, payment processing, and notification functionality.
 
-## 👤 Demo Credentials
+##  Demo Credentials
 Test authentication and role-based access with these accounts:
 
 - **Admin Account**  
